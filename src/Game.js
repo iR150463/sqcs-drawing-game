@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { getMultipleRandom, pushRandomReturnArr } from './arrayTools';
 import { scoring } from "./database"
 
-function GetPlayers({setPlayers, setState}) {
+function GetPlayers({setPlayers, onFinish, setState}) {
     const [input, setInput] = useState(0)
 
     return (
@@ -13,7 +13,7 @@ function GetPlayers({setPlayers, setState}) {
             <h2>輸入小隊的人數：</h2>
             <div className="App">
                 <input type='number' onChange={(e)=>{setInput(e.target.value)}}></input>
-                <button onClick={()=>{setPlayers(parseInt(input)); setState('gaming')}}>開始</button>
+                <button onClick={()=>{setPlayers(parseInt(input)); onFinish(); setState('gaming')}}>開始</button>
             </div>
         </div>
     )
@@ -49,7 +49,7 @@ function DrawingRound(props) {
             return (
                 <div className='mainDiv'>
                     <h1>停！交給下一位</h1>
-                    <div className="App drawing-area">
+                    <div className="App drawing-area invis">
                         <DrawingArea allowDraw={false} key="drawingArea"/>
                     </div>
                     <button onClick={()=>{setRound(round+1); setTimeleft(10)}}>繼續</button>
@@ -59,7 +59,7 @@ function DrawingRound(props) {
     } else {
         const setState = props.setState;
 
-        if (timeleft > 0) {
+        if (timeleft > 7) {
             return (
                 <div className='mainDiv'>
                     <h1>小組的畫作！</h1>
@@ -67,7 +67,7 @@ function DrawingRound(props) {
                         <DrawingArea allowDraw={false} key="drawingArea"/>
                     </div>
                     <h2>試著猜出你們小組的主題！</h2>
-                    <p>剩下 {timeleft} 秒</p>
+                    <p>{timeleft-7} 秒後進入下一步</p>
                 </div>
             )
         } else {
@@ -109,7 +109,7 @@ function DrawingRounds({players, topic, setState}) {
     }
 }
 
-function GuessAnswer({answer, randomAnswers}) {
+function GuessAnswer({answer, randomAnswers, setState}) {
 
     const [answersArray, setAnswersArray] = useState(pushRandomReturnArr(randomAnswers, answer));
     const [correct, setCorrect] = useState(false);
@@ -123,6 +123,7 @@ function GuessAnswer({answer, randomAnswers}) {
             <div className='mainDiv'>
                 <h1>答對了！答案是 {answer}</h1>
                 <p>你的分數: {score}</p>
+                <button onClick={()=>{setState('pregame')}}>重新遊玩</button>
             </div>
         )
     }
@@ -135,13 +136,12 @@ function GuessAnswer({answer, randomAnswers}) {
             <div className='mainDiv'>
                 <h1>你輸了！答案是 {answer}</h1>
                 <p>你的分數: {score}</p>
+                <button onClick={()=>{setState('pregame')}}>重新遊玩</button>
             </div>
         )
     }
 
-    console.log(answersArray, answer)
-
-    // Generate questions
+    // Generate question buttons
     let answerButtons = [];
     for (let i=0; i<answersArray.length; i++) {
         if (answersArray[i] === answer) {
@@ -168,15 +168,24 @@ function GuessAnswer({answer, randomAnswers}) {
     )
 }
 
-function Game({topic, allTopics}) {
+function Game({allTopics}) {
     const [state, setState] = useState('pregame');
     const [players, setPlayers] = useState(0);
+    const [topicLog, setTopicLog] = useState([]);
 
     if (state === 'pregame') {
+        const onFinish = () => {
+            const allNewTopics = allTopics.filter((t) => !topicLog.includes(t));
+            setTopicLog([...topicLog, allNewTopics[Math.floor(Math.random() * allNewTopics.length)]]);
+            setState('gaming')
+        }
+
         return (
-            <GetPlayers setPlayers={setPlayers} setState={setState} />
+            <GetPlayers setPlayers={setPlayers} onFinish={onFinish} setState={setState} />
         )
     }
+
+    const topic = topicLog[topicLog.length-1];
 
     if (state === 'gaming') {
         return (
@@ -186,7 +195,7 @@ function Game({topic, allTopics}) {
 
     if (state === 'guess') {
         return (
-            <GuessAnswer answer={topic} randomAnswers={getMultipleRandom(allTopics.filter(t => t!==topic), 9)} />
+            <GuessAnswer answer={topic} randomAnswers={getMultipleRandom(allTopics.filter(t => t!==topic), 9)} setState={setState} />
         )
     }
 }
