@@ -38,7 +38,7 @@ function DrawingRound(props) {
         if (timeleft > 0) {
             return (
                 <div className='mainDiv'>
-                    <h1>完成小組的畫作！</h1>
+                    <h1>完成小組的畫作！題目是：{props.topic}</h1>
                     <div className="App drawing-area">
                         <DrawingArea allowDraw={true} key="drawingArea"/>
                     </div>
@@ -48,7 +48,7 @@ function DrawingRound(props) {
         } else {
             return (
                 <div className='mainDiv'>
-                    <h2>停！交給下一位</h2>
+                    <h1>停！交給下一位</h1>
                     <div className="App drawing-area">
                         <DrawingArea allowDraw={false} key="drawingArea"/>
                     </div>
@@ -88,8 +88,7 @@ function DrawingRounds({players, topic, setState}) {
     if (round === 0) {
         return (
             <div className='mainDiv'>
-                <h1>你的主題是：</h1>
-                <h2>{topic}</h2>
+                <h1>第一個人就定位！</h1>
                 <button onClick={()=>{setRound(1)}}>開始畫畫</button>
             </div>
         )
@@ -98,19 +97,20 @@ function DrawingRounds({players, topic, setState}) {
     // Middle rounds: pure drawings
     if (round < players) {
         return (
-            <DrawingRound round={round} setRound={setRound} guessing={false} />
+            <DrawingRound round={round} setRound={setRound} guessing={false} topic={topic} />
         )
     }
 
     // Last round: see the drawing and click yes
     if (round === players) {
         return (
-            <DrawingRound setState={setState} guessing={true} />
+            <DrawingRound setState={setState} guessing={true} topic={topic} />
         )
     }
 }
 
 function GuessAnswer({answer, randomAnswers}) {
+
     const [answersArray, setAnswersArray] = useState(pushRandomReturnArr(randomAnswers, answer));
     const [correct, setCorrect] = useState(false);
     const [lives, setLives] = useState(4);
@@ -139,10 +139,12 @@ function GuessAnswer({answer, randomAnswers}) {
         )
     }
 
+    console.log(answersArray, answer)
+
     // Generate questions
     let answerButtons = [];
     for (let i=0; i<answersArray.length; i++) {
-        if (answersArray.indexOf(answer) === i) {
+        if (answersArray[i] === answer) {
             answerButtons.push(<button onClick={()=>{setCorrect(true)}} key={`answerBtn`} className="answerBtm">{answer}</button>)
         } else {
             const fakeAns = answersArray[i];

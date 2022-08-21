@@ -21,12 +21,13 @@ input {
 }
 
 button {
-  width: 100px;
+  width: 140px;
   height: 30px;
   margin-right: 5%;
 
   background-color: rgb(234, 199, 255);
   color: rgb(27, 0, 43);
+  font-size: medium;
 }
 
 .answerBtm {

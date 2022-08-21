@@ -5,8 +5,9 @@ export function getMultipleRandom(arr, num) {
 }
 
 export function pushRandomReturnArr(arr, element) {
-    let newArr = arr;
-    newArr.splice(Math.floor(Math.random() * (arr.length + 1)), 0, element);
+    let newArr = [...arr];
+    newArr.splice(Math.floor(Math.random() * (newArr.length+1)), 0, element);
+    //newArr.sort(() => 0.5 - Math.random());
 
     return newArr;
 }
