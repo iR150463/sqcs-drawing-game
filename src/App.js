@@ -1,14 +1,13 @@
 import './App.css';
-import DrawingArea from './DrawingArea';
+import Game from './Game.js';
+import topics from './database.js';
 
 function App() {
+  const randomTopic = topics[Math.floor(Math.random() * topics.length)]
+
   return (
     <>
-      <h1> Drawing Area</h1>
-      <div className="App drawing-area">
-          
-          <DrawingArea />
-      </div>
+      <Game topic={randomTopic} allTopics={topics} />
     </>
   );
 }

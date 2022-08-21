@@ -1,3 +1,7 @@
+* {
+  font-family: fantasy;
+}
+
 .App {
   text-align: center;
 }
@@ -7,16 +11,38 @@
   pointer-events: none;
 }
 
-h1 {
-  margin: 10% 33%;
+.mainDiv {
+  margin: 5% 11%;
+}
+
+input {
+  height: 30px;
+  margin-right: 5%;
+}
+
+button {
+  width: 100px;
+  height: 30px;
+  margin-right: 5%;
+
+  background-color: rgb(234, 199, 255);
+  color: rgb(27, 0, 43);
+}
+
+.answerBtm {
+  margin: 5% 5%;
+}
+
+.invis {
+  visibility: hidden;
 }
 
 .drawing-area {
-  width: 600px;
-  height: 600px;
-  background-color: lightgrey;
-  border: 2px solid greenyellow;
-  margin: -8% 23%;
+  width: 400px;
+  height: 400px;
+  background-color: rgb(254, 252, 255);
+  border: 2px solid rgb(234, 199, 255);
+  margin: 0% 23%;
 }
 
 @media (prefers-reduced-motion: no-preference) {

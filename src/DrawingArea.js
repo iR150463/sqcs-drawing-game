@@ -2,7 +2,10 @@ import { React } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import { useEffect, useState, useRef } from 'react';
 
-const DrawingArea = ({onClearLines, clearLines}) => {
+const DrawingArea = (props) => {
+    //const onClearLines = props.onClearLines;
+    const clearLines = props.clearLines;
+    const allowDraw = props.allowDraw;
 
     const [lines, setLines] = useState([]);
     const isDrawing = useRef(false);
@@ -12,9 +15,11 @@ const DrawingArea = ({onClearLines, clearLines}) => {
     }, [clearLines])
     
     const handleMouseDown = (e) => {
-        isDrawing.current = true;
-        const pos = e.target.getStage().getPointerPosition();
-        setLines([...lines, { points: [pos.x, pos.y] }]);
+        if (allowDraw) {
+            isDrawing.current = true;
+            const pos = e.target.getStage().getPointerPosition();
+            setLines([...lines, { points: [pos.x, pos.y] }]);    
+        }
     };
     
     const handleMouseMove = (e) => {
@@ -43,11 +48,13 @@ const DrawingArea = ({onClearLines, clearLines}) => {
         isDrawing.current = false;
     };
 
+    const className = " text-center text-dark";
+
     return (
-        <div className=" text-center text-dark">
+        <div className={className}>
             <Stage
-                width={600}
-                height={600}
+                width={400}
+                height={400}
                 onMouseDown={handleMouseDown}
                 onMousemove={handleMouseMove}
                 onMouseup={handleMouseUp}
@@ -58,7 +65,7 @@ const DrawingArea = ({onClearLines, clearLines}) => {
                         <Line
                         key={i}
                         points={line.points}
-                        stroke="#df4b26"
+                        stroke="rgb(38, 0, 61)"
                         strokeWidth={2}
                         tension={0.5}
                         lineCap="round"
