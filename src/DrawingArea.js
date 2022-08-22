@@ -6,9 +6,11 @@ const DrawingArea = (props) => {
     //const onClearLines = props.onClearLines;
     const clearLines = props.clearLines;
     const allowDraw = props.allowDraw;
+    const round = props.round;
 
     const [lines, setLines] = useState([]);
     const isDrawing = useRef(false);
+    const mdRound = useRef(0); // mouse down round
 
     useEffect(() => {
         //loadImage();
@@ -17,6 +19,7 @@ const DrawingArea = (props) => {
     const handleMouseDown = (e) => {
         if (allowDraw) {
             isDrawing.current = true;
+            mdRound.current = round;
             const pos = e.target.getStage().getPointerPosition();
             setLines([...lines, { points: [pos.x, pos.y] }]);    
         }
@@ -24,8 +27,8 @@ const DrawingArea = (props) => {
     
     const handleMouseMove = (e) => {
         // no drawing - skipping
-        if (!isDrawing.current) {
-          return;
+        if (!isDrawing.current || mdRound.current != round) {
+            return;
         }
         const stage = e.target.getStage();
         const point = stage.getPointerPosition();

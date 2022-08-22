@@ -22,6 +22,7 @@ function GetPlayers({setPlayers, onFinish, setState}) {
 function DrawingRound(props) {
     const [timeleft, setTimeleft] = useState(10);
     const guessing = props.guessing;
+    const round = props.round;
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -32,7 +33,6 @@ function DrawingRound(props) {
     }, []);
 
     if (!guessing) {
-        const round = props.round;
         const setRound = props.setRound;
 
         if (timeleft > 0) {
@@ -40,7 +40,7 @@ function DrawingRound(props) {
                 <div className='mainDiv'>
                     <h1>完成小組的畫作！題目是：{props.topic}</h1>
                     <div className="App drawing-area">
-                        <DrawingArea allowDraw={true} key="drawingArea"/>
+                        <DrawingArea allowDraw={true} round={round} key="drawingArea"/>
                     </div>
                     <h2>剩下 {timeleft} 秒</h2>
                 </div>
@@ -50,7 +50,7 @@ function DrawingRound(props) {
                 <div className='mainDiv'>
                     <h1>停！交給下一位</h1>
                     <div className="App drawing-area invis">
-                        <DrawingArea allowDraw={false} key="drawingArea"/>
+                        <DrawingArea allowDraw={false} round={round} key="drawingArea"/>
                     </div>
                     <button onClick={()=>{setRound(round+1); setTimeleft(10)}}>繼續</button>
                 </div>
@@ -64,7 +64,7 @@ function DrawingRound(props) {
                 <div className='mainDiv'>
                     <h1>小組的畫作！</h1>
                     <div className="App drawing-area">
-                        <DrawingArea allowDraw={false} key="drawingArea"/>
+                        <DrawingArea allowDraw={false} round={round} key="drawingArea"/>
                     </div>
                     <h2>試著猜出你們小組的主題！</h2>
                     <p>{timeleft-7} 秒後進入下一步</p>
@@ -104,7 +104,7 @@ function DrawingRounds({players, topic, setState}) {
     // Last round: see the drawing and click yes
     if (round === players) {
         return (
-            <DrawingRound setState={setState} guessing={true} topic={topic} />
+            <DrawingRound round={round} setState={setState} guessing={true} topic={topic} />
         )
     }
 }
