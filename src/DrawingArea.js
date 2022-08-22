@@ -27,7 +27,7 @@ const DrawingArea = (props) => {
     
     const handleMouseMove = (e) => {
         // no drawing - skipping
-        if (!isDrawing.current || mdRound.current != round) {
+        if (!isDrawing.current || mdRound.current !== round) {
             return;
         }
         const stage = e.target.getStage();
